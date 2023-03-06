@@ -1,0 +1,356 @@
+*{
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+ 
+html {
+	background: #FFF;
+}
+
+input, textarea {
+	background-color: #fff;
+	font-weight: bold;
+}
+
+button {
+	padding: 5px;
+	color: #4682b4;
+	font-weight: bold;
+	font-size: 14px;
+	padding: 10px;
+	margin: 0px;
+	display: inline;
+	background-color:#ffd700;
+}
+
+input, select, textarea{
+	font-size: 14px;
+	color: #454645;
+	padding: 10px;
+	margin: 5px 10px 5px 0px;
+	display: block;
+	/*background-color:#ffffbd;*/
+	background-color:#ffffff;
+	border: 1px solid #006eb5;
+	width: 100%;
+}
+
+input[type=submit]{
+	background-color:#ffd700;
+}
+
+label {
+	/* margin-left: 2%; */
+	/* padding: 5px; */
+	color: #228B22; /*blue*/
+}
+
+.labelaviso {
+	font-size: 10px;
+	color: red;
+}
+
+.container_menu {
+	width: 25%;
+	height: 640px;
+	float: left;
+}
+
+.titulo {
+	width: 100%;
+	margin: 0;
+	margin-bottom: 2%;
+	padding: 1%;
+	color: #ffffff;
+	background-color: #006eb5;
+}
+
+h2{
+	text-align: center;
+}
+
+.container_dois {
+	height: auto;
+	margin-right:auto;
+	margin-left:auto;
+	padding-left:15px;
+	padding-right:15px;
+	padding-top: 10px;
+	padding-bottom: 15px;
+	float: left;
+	/*background-color: #DCDCDC;
+	box-shadow: 0 5px 10px #8B4513;*/
+}
+
+.container_login {
+	height: auto;
+	margin-right:auto;
+	margin-left:auto;
+	padding-left:15px;
+	padding-right:15px;
+	padding-top: 10px;
+	padding-bottom: 15px;
+	background-color: #DCDCDC;
+	box-shadow: 0 5px 10px #8B4513;
+}
+
+form {
+	/*background-color: #228B22;*/ /*cor do formulario */
+	/*box-shadow: 0 5px 10px #8B4513;*/
+	padding: 10px;
+}
+
+img {
+	width: 100%;
+	margin: auto;
+	/* padding-top: 20px; */
+	/* margin-left: 110px; */
+	/* margin-bottom: 20px; */
+}
+
+fieldset {
+	margin-top: 5px;
+	margin-bottom: 10px;
+	border: 1px solid grey;
+}
+
+#listaStatus{
+	padding:0px;
+	background-color: #4682b4;
+    color: white;
+}
+
+/*Menu Responsivo*/
+#menu_res{
+	display: none;
+}
+
+
+/*Menu Responsivo*/
+
+
+.menu {
+	position: relative;
+}
+
+.menu, .submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.submenu {
+	display: none;
+	position: absolute;
+	min-width: 200px; 
+	text-align: right;
+	margin-left: 100%;
+	margin-top: -49px;
+	border-left:1px solid #228B22; /*blue*/
+}
+
+
+.saida {
+	border-bottom: 1px solid #8A2BE2;
+}
+
+.menu a {
+  display: block;
+  background-color: #006eb5;
+  text-decoration: none;
+  text-align: center;
+  padding: 15px 15px;
+  color: #ffffff; /*blue*/
+  border-top: 2px solid #d3d3d3; /*#FFF00F; */
+  /* border-radius: 0 80%; */
+}
+
+.submenu a {
+	background-color: #006eb5;
+	color: #ffffff; /*blue*/
+	border-left: 0;
+}
+
+.menu li:hover .submenu {
+	display: block;
+	max-height: 280px;
+
+}
+
+.menu a:hover {
+    background-color: #A9A9A9; /* #FFFF00;*/
+}
+
+.submenu a:hover {
+	background-color: #A9A9A9 ; /*#FFFF00*/
+}
+
+.container_frame {
+	width: 75%;
+	height: 640px;
+	/* background-color: #DFB2F6; */
+	margin-left: 25%;
+}
+
+iframe {
+	width: 100%;
+	/* height: 600px; */
+	/* height: 94%;*/
+}
+
+footer {
+	background-color: #006eb5;
+	padding: 10px 0px;
+	color: #ffffff;
+	text-align: center;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+	font-size:12px;
+}
+
+th, td {
+    text-align: center;
+    padding: 8px;
+	border: 1px solid #d3d3d3;
+}
+
+tr:nth-child(even){
+	background-color: #f2f2f2;
+}
+
+th {
+    background-color: #006eb5; /*#4682b4*/
+    color: white;
+}
+tr:hover{
+	background-color: #A9A9A9; /*yelow*/
+}
+
+/*Formulário flutuante Resposta Dada*/
+.container {
+    padding: 16px;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto;
+    border: 1px solid #888;
+    width: 80%;
+}
+/* Adiciona Animação de Zoom */
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+.botao-nivel{
+	float:right; 
+	width: 30px; 
+	height: 30px; 
+	padding: 2px; 
+	background-color: #DCDCDC;
+}
+
+.divHistClinica{
+	width: 50%;
+	float: left;
+	padding: 5px 5px 5px 15px;
+}
+
+.divTituloHistClinica{
+	padding: 5px;
+	text-align: center;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+.conteudohistClinica{
+	height:250px;
+	width:100%; 
+	overflow-y: auto;
+	border: 1px solid grey;
+	padding: 5px;
+}
+
+.divDadosHistClinica{
+	margin-bottom: 15px;
+	border-bottom: 1px solid grey;
+}
+
+#idChamado{
+	width: 80%;
+	height: 50px;
+	margin: auto;
+	/*border: 1px solid black;*/
+	padding: 10px;
+}
+
+.linChamado{
+	padding: 5px;
+	margin: auto;
+}
+
+.colChamado{
+	padding: 10px;
+	float: left;
+	border-bottom: 1px solid blue;
+	text-align: center;
+}
+
+@-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)} 
+    to {-webkit-transform: scale(1)}
+}
+    
+@keyframes animatezoom {
+    from {transform: scale(0)} 
+    to {transform: scale(1)}
+}
+/*Formulário flutuante Resposta Dada*/
+@media (min-width:468px){ /*a partir de 768px;*/
+	.container_dois {
+		width: 100%;
+	}
+	img {
+		display: block;
+		margin: auto;
+		width: 60%;
+	}
+}
+
+@media (min-width:768px){ /*a partir de 768px;*/
+	.container_frame {
+		width:auto;
+	}
+	.container_dois {
+		width: 100%;
+	}
+	.container_login {
+		width:550px;
+	}
+	img {
+		display: block;
+		margin: auto;
+		width: 100%;
+	}
+}
