@@ -57,15 +57,15 @@
             return $entrada;
         }
 
-        function listarEntradas($dataEntrada, $dataSaida)
+        function listarEntradas($dataEntrada)
         {
             $entradas = array();
 
-            $sql = "SELECT e.*, u.nome_usuario
-                    FROM tbl_entradas e, tbl_usuarios u
+            $sql = "SELECT e.*, u.nome_usuario, p.nome_prof
+                    FROM tbl_entradas e, tbl_usuarios u, tbl_profissionais p
                     WHERE e.cns_usuario=u.cns_usuario 
+                    AND e.cns_prof=p.cns_prof 
                     AND e.data_entrada='$dataEntrada'
-                    AND e.data_saida='$dataSaida'
                     ORDER BY e.id_entrada;";
 
             $res = $this->conexao->getConn()->query($sql);
@@ -88,6 +88,7 @@
                     
                     $profissional = new Profissionais(null, null);
                     $profissional->setCnsPessoa($linha['cns_prof']);
+                    $profissional->setNomePessoa($linha['nome_prof']);
 
                     $entrada->setProfissionalExec($profissional);
 
@@ -120,32 +121,17 @@
                 while($linha = $res->fetch_assoc())
                 {
                     $entrada->setIdEnt($linha['id_ent']);
-                    $entrada->setLoginRec($linha['login_rec']);
-                    $entrada->setDataHoraEnt($linha['data_hora_ent']);
 
                     $usuarioRet = new Usuarios();
                     $usuarioRet->setCnsPessoa($linha['cns_usuario']);
                     $usuarioRet->setNomePessoa($linha['nome_usuario']);
-                    $usuarioRet->setDataNasc($linha['data_nasc']);
-                    $usuarioRet->setSexo($linha['sexo']);
-                    $usuarioRet->setEhHipertenso($linha['hipertenso']);
-                    $usuarioRet->setEhDiabetico($linha['diabetico']);
 
                     $entrada->setUsuario($usuarioRet);
 
-                    $entrada->setCnsEnf($linha['cns_enf']);
-                    $entrada->setDataHoraTriagem($linha['data_hora_triagem']);
-                    $entrada->setClassificacao($linha['classificacao']);
-                    $entrada->setSituacao($linha['situacao_ent']);
                     
                     $profissional = new Profissionais(null, null);
                     $profissional->setCnsPessoa($linha['cns_medico_i']);
 
-                    $entrada->setMedicoIniciou($profissional);
-
-                    $entrada->setDataHoraIAtend($linha['data_hora_i_atend']);
-                    $entrada->setDataHoraFAtend($linha['data_hora_f_atend']);
-                    $entrada->setAlta($linha['alta']);
                 }
             }
 
@@ -186,21 +172,16 @@
                 while($linha = $res->fetch_assoc())
                 {
                     $entrada->setIdEnt($linha['id_ent']);
-                    $entrada->setLoginRec($linha['login_rec']);
-                    $entrada->setDataHoraEnt($linha['data_hora_ent']);
+                    
 
                     $usuario = new Usuarios();
                     $usuario->setCnsPessoa($linha['cns_usuario']);
                     $usuario->setNomePessoa($linha['nome_usuario']);
-                    $usuario->setDataNasc($linha['data_nasc']);
-                    $usuario->setSexo($linha['sexo']);
-                    $usuario->setEhHipertenso($linha['hipertenso']);
-                    $usuario->setEhDiabetico($linha['diabetico']);
+                    
 
                     if ($perfilProf == 'ENFERMEIRO')
                     {
-                        $usuario->setNomeMae($linha['nome_mae']);
-                        $usuario->setCpf($linha['cpf_usuario']);
+                        
 
                         $endereco = new Endereco($linha['cep'], 
                                                  $linha['logradouro'], 
@@ -210,23 +191,17 @@
                                                  $linha['municipio'], 
                                                  $linha['estado']);
 
-                        $usuario->setEndereco($endereco);
+                        
                     }
 
                     $entrada->setUsuario($usuario);
 
-                    $entrada->setCnsEnf($linha['cns_enf']);
-                    $entrada->setDataHoraTriagem($linha['data_hora_triagem']);
-                    $entrada->setClassificacao($linha['classificacao']);
-                    $entrada->setSituacao($linha['situacao_ent']);
+                    
 
                     $profissional = new Profissionais(null, null);
                     $profissional->setCnsPessoa($linha['cns_medico_i']);
 
-                    $entrada->setMedicoIniciou($profissional);
-                    $entrada->setDataHoraIAtend($linha['data_hora_i_atend']);
-                    $entrada->setDataHoraFAtend($linha['data_hora_f_atend']);
-                    $entrada->setAlta($linha['alta']);
+                    
                 }
             }
             
@@ -280,6 +255,29 @@
                     SET data_saida='$dataSaida',
                         hora_saida='$horaSaida' 
                     WHERE id_entrada=$idEntrada";
+
+            if ($this->conexao->getConn()->query($sql) === TRUE)
+            {
+                $msg = 1;
+            }
+            else
+            {
+                $erro = mysqli_errno($this->conexao->getConn());
+
+				if ($erro == 1062)
+				{
+                    $msg = 2;
+				}
+            }
+
+            return $msg;
+        }
+
+        function excluiEntrada($idEntrada)
+        {
+            $msg = 0;
+            
+            $sql = "DELETE FROM tbl_entradas WHERE id_entrada=$idEntrada";
 
             if ($this->conexao->getConn()->query($sql) === TRUE)
             {

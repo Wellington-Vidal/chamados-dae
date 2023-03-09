@@ -768,3 +768,113 @@ function SiglaNomeEstado(uf, tipo)
 
 	return resposta;
 }
+
+function abreCalendario(btn)
+{
+	try
+	{
+		const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+		const diasSemana = ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa'];
+		const diasMeses = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+		let dia = 0;
+		let hoje = new Date();
+		let anoAtual = hoje.getFullYear();
+		let mesAtual = hoje.getMonth();
+
+		let calendario = "<div style=\"width: 50px; heigth: 50px; display: block; padding: 5px;\">";
+		calendario = calendario + "<div>";
+		
+		calendario = calendario + "</div>";
+
+		calendario = calendario + "<div>";
+		calendario = calendario + "<table>";
+        
+        calendario = calendario + "<tr>";
+        calendario = calendario + "<td>";
+        calendario = calendario + "<button type='button'><<</button>";
+        calendario = calendario + "</td>";
+        calendario = calendario + "<td colspan='5'>";
+        calendario = calendario + "<select>";
+		for (let i = 0 ; i < meses.length ; i++)
+		{
+			let sel = mesAtual == i ? ' selected' : '';
+		
+			calendario = calendario + "<option value='" + meses[i] + "'" + sel + ">"+ meses[i] + "</option>";
+		}
+		calendario = calendario + "</select>";
+        
+        calendario = calendario + "<select style=\"float: right;\">";
+		for (let a = 1970 ; a <= anoAtual ; a++)
+		{
+			let sel = anoAtual == a ? ' selected' : '';
+		
+			calendario = calendario + "<option value='" + a + "'" + sel + ">"+ a + "</option>";
+		}
+		calendario = calendario + "</select>";
+        calendario = calendario + "</td>";
+        calendario = calendario + "<td>";
+        calendario = calendario + "<button type='button'>>></button>";
+        calendario = calendario + "</td>";
+        calendario = calendario + "</tr>";
+        
+        let diasMes = diasMeses[mesAtual];
+        
+        if (mesAtual == 1) //Fev
+        {
+        	if ((anoAtual % 400 == 0) || ((anoAtual % 4 == 0) && (anoAtual % 100 != 0)))
+            {
+            	diasMes = 29;
+            }
+        }
+        
+        while (dia < diasMes)
+        {
+        	calendario = calendario + "<tr>";
+        
+        	if (dia == 0)
+            {
+            	for (let ds = 0 ; ds < diasSemana.length ; ds++)
+				{
+					calendario = calendario + "<th>" + diasSemana[ds] + "</th>";
+				}
+                
+                dia = 1;
+            }
+            else
+			{
+				for (let d = 0 ; d <= 6 ; d++)
+				{
+					let strDia = dia < 10 ? '0' + dia : dia;
+					
+					let dataCal = new Date(anoAtual, mesAtual, dia);
+                    alert(strDia);
+					
+					if ((dataCal.getDay() != d) || (dataCal.getMonth() != mesAtual))
+					{
+						strDia = '';
+					}
+					else
+					{
+						dia = dia + 1;
+					}
+					
+					calendario = calendario + "<td>" + strDia + "</td>";
+				}
+			}
+
+			calendario = calendario + "</tr>";
+        }
+
+		calendario = calendario + "</table>";
+		calendario = calendario + "</div>";
+
+		calendario = calendario + "</div>";
+
+		document.getElementById('pagina').innerHTML = calendario;
+	}
+	catch(err)
+	{
+		alert(err.message);
+	}
+}

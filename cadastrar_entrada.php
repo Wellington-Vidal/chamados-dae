@@ -133,11 +133,12 @@
 			}
 			else if ($acao == "ALTERAR")
 			{
-				$res = $entradasDao->alteraEntrada($entrada);
+				//SEM ACAO
 			}
 			else if ($acao == "EXCLUIR")
 			{
-				//FAZER
+				$idEntrada = FiltraDados($_POST["idEntrada"]);
+				$res = $entradasDao->excluiEntrada($idEntrada);
 			}
 
 			if ($res == 1)
@@ -155,11 +156,8 @@
 		}
 	}
 	
-	function ExibirEntradas($dataEntrada, $dataSaida)
+	function ExibirEntradas($dataEntrada)
 	{
-		date_default_timezone_set('America/Sao_Paulo');
-		$dataHoje = date("d-m-Y");
-
 		define('TR_I', '<tr>');
 		define('TR_F', '</tr>');
 		define('TH_I', '<th>');
@@ -167,20 +165,23 @@
 		define('TD_I', '<td>');
 		define('TD_F', '</td>');
 
-		$txtDataEntrada = "<input type='date' pattern='dd-mm-yyyy' onchange=\"ExibirEntrada()\" value=\"$dataHoje\" style=\"width: 150px; margin: auto;\">";
+		$txtDataEntrada = "<input type='text' id='txtDataEntFiltro' onkeydown=\"FormataData(this)\" onkeyup=\"FormataData(this)\" value=\"$dataEntrada\" placeholder='Data Entrada' maxlength='10' style=\"width: 150px; margin: auto; text-align: center;\">";
+		$selProfissionais = "<select id='selProfFiltro' onchange=\"FiltraTabelaEntradas()\" style=\"text-align: center;\"><option value='selecione'>Profissional</option>" . ListarProfissionais('') . "</select>";
+		$txtNomeUsuarioFiltro = "<input type='text' id='txtNomeUsuarioFiltro' onkeyup=\"FiltraTabelaEntradas()\" placeholder='Usuário' style=\"text-align: center;\">";
 
 		$tabelaEnt = "<div style=\"height:auto; width:100%; overflow: auto;\">\n";
-		$tabelaEnt = $tabelaEnt . "<table border='1'>";
+		$tabelaEnt = $tabelaEnt . "<table id='tab-ent'>";
 		$tabelaEnt = $tabelaEnt . TR_I;
+		$tabelaEnt = $tabelaEnt . TH_I . "Nº" . TH_F;
 		$tabelaEnt = $tabelaEnt . TH_I . $txtDataEntrada . TH_F;
 		$tabelaEnt = $tabelaEnt . TH_I . "Data\Hora Saída" . TH_F;
-		$tabelaEnt = $tabelaEnt . TH_I . "Profissional" . TH_F;
-		$tabelaEnt = $tabelaEnt . TH_I . "Usuário" . TH_F;
+		$tabelaEnt = $tabelaEnt . TH_I . $selProfissionais . TH_F;
+		$tabelaEnt = $tabelaEnt . TH_I . $txtNomeUsuarioFiltro . TH_F;
 		$tabelaEnt = $tabelaEnt . TH_I . "Excluir" . TH_F;
 		$tabelaEnt = $tabelaEnt . TR_F;
 		
 		$entradasDao = new EntradasDAO();
-		$listaEntradas = $entradasDao->listarEntradas($dataEntrada, $dataSaida);
+		$listaEntradas = $entradasDao->listarEntradas($dataEntrada);
 
 		if (!empty($listaEntradas))
 		{
@@ -189,11 +190,11 @@
 				$idEntrada = $listaEntradas[$p]->getIdEnt();
 				$dataEntrada = $listaEntradas[$p]->getDataEntrada();
 				$horaEntrada = $listaEntradas[$p]->getHoraEntrada();
-				$dataHoraEntrada = "$dataEntrada $horaEntrada";
+				$dataHoraEntrada = "$dataEntrada - $horaEntrada";
 
 				$dataSaida = $listaEntradas[$p]->getDataSaida();
 				$horaSaida = $listaEntradas[$p]->getHoraSaida();
-				$dataHoraSaida = "$dataSaida $horaSaida";
+				$dataHoraSaida = "$dataSaida - $horaSaida";
 
 				if ($dataSaida == "")
 				{
@@ -203,9 +204,10 @@
 				$nomeProf = $listaEntradas[$p]->getProfissionalExec()->getNomePessoa();
 				$nomeUsuario = $listaEntradas[$p]->getUsuario()->getNomePessoa();
 
-				$botaoExcluir = "<button type='button' onclick=\"ExcluirEntrada('$idEntrada')\" style=\"padding: 0px;\">Editar</button>";
+				$botaoExcluir = "<button type='button' onclick=\"ExcluirEntrada('$idEntrada')\" style=\"padding: 0px;\">Excluir</button>";
 
 				$tabelaEnt = $tabelaEnt . TR_I;
+				$tabelaEnt = $tabelaEnt . TD_I . ($p + 1) . TD_F;
 				$tabelaEnt = $tabelaEnt . TD_I . $dataHoraEntrada . TD_F;
 				$tabelaEnt = $tabelaEnt . TD_I . $dataHoraSaida . TD_F;
 				$tabelaEnt = $tabelaEnt . TD_I . $nomeProf . TD_F;
@@ -217,33 +219,11 @@
 		else
 		{
 			$tabelaEnt = $tabelaEnt . TR_I;
-			$tabelaEnt = $tabelaEnt . "<td colspan='5'>" . "Sem Registros" . TD_F;
+			$tabelaEnt = $tabelaEnt . "<td colspan='6'>" . "Sem Registros" . TD_F;
 			$tabelaEnt = $tabelaEnt . TR_F;
 		}
 		
 		return $tabelaEnt;
-	}
-	
-	function PerfisDeAcesso($perfil)
-	{
-		$opcoes = '';
-
-		$perfis = array('EXECUTANTE' => 'Executante', 
-						'ADMINISTRADOR' => 'Administrador');
-
-		foreach ($perfis as $chave => $valor)
-		{
-			$sel = '';
-
-			if ($perfil == $chave)
-			{
-				$sel = ' selected';
-			}
-
-			$opcoes = $opcoes . "<option value='$chave'$sel>$valor</option>";
-		}
-
-		return $opcoes;
 	}
 
     function ListarProfissionais($cns)
@@ -395,26 +375,53 @@
 				}
 			}
 
-			function ExcluirOperador(nomeOp, cns, perfil, status)
+			function ExcluirEntrada(idEntrada)
 			{
-				var res = confirm("Deseja Excluir este Operador (" + cns + ")?");
+				var res = confirm("Deseja Excluir este Registro?");
 
 				if (res == true)
 				{
-					document.getElementById("nome_op").value = nomeOp;
-					document.getElementById("cns").value = cns;
-					
 					document.getElementById("acao").value = "EXCLUIR";
-					document.getElementById("cns").disabled = false;
+					document.getElementById("idEntrada").value = idEntrada;
 					document.frm_cad_op.submit();
 				}
 				else
 				{
-					ocument.getElementById("nome_op").value = "";
-					document.getElementById("cns").value = "";
-					
 					document.getElementById("acao").value = "";
-					document.getElementById("cns").disabled = false;
+					document.getElementById("idEntrada").value = "";
+				}
+			}
+
+			function FiltraTabelaEntradas()
+			{
+				let selProfFiltro = document.getElementById('selProfFiltro');
+				let txtNomeUsuarioFiltro = document.getElementById('txtNomeUsuarioFiltro');
+				Maiusculo(txtNomeUsuarioFiltro);
+
+				let tabela = document.getElementById('tab-ent');
+				let linhas = tabela.getElementsByTagName('tr');
+				let num = 1;
+				
+				for (let i = 1 ; i < linhas.length ; i++)
+				{
+					let colunas = linhas[i].getElementsByTagName('td');
+
+					if (colunas)
+					{
+						let testeFiltroProf = ((colunas[3].innerHTML == selProfFiltro.options[selProfFiltro.selectedIndex].text) || (selProfFiltro.value == 'selecione'));
+						let testeFiltroUsuario = ((colunas[4].innerHTML.indexOf(txtNomeUsuarioFiltro.value) != -1) || (txtNomeUsuarioFiltro.value == ''));
+
+						if (testeFiltroProf && testeFiltroUsuario)
+						{
+							linhas[i].style.display = '';
+							colunas[0].innerHTML = num;
+							num = num + 1;
+						}
+						else
+						{
+							linhas[i].style.display = 'none';
+						}
+					}
 				}
 			}
 
@@ -528,6 +535,7 @@
 				<button type="button" onclick="Limpar()">Limpar</button>
                 
 				<input type="hidden" id="acao" name="acao" value=""/>
+				<input type="hidden" id="idEntrada" name="idEntrada" value=""/>
 			</form>
 			
 			<?php 
@@ -539,7 +547,10 @@
 		</div><br>
 
 		<?php
-			echo "<center>" . ExibirEntradas($dataEntrada, $dataSaida) . "</center>";
+			date_default_timezone_set('America/Sao_Paulo');
+			$dataHoje = date("d/m/Y");
+			
+			echo "<center>" . ExibirEntradas($dataHoje) . "</center>";
 		?>
 
 		<script src="javascripts/app.js?v=<?php echo VERSAO;?>"></script>
