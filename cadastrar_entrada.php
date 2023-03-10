@@ -165,7 +165,7 @@
 		define('TD_I', '<td>');
 		define('TD_F', '</td>');
 
-		$txtDataEntrada = "<input type='text' id='txtDataEntFiltro' onkeydown=\"FormataData(this)\" onkeyup=\"FormataData(this)\" value=\"$dataEntrada\" placeholder='Data Entrada' maxlength='10' style=\"width: 150px; margin: auto; text-align: center;\">";
+		$txtDataEntrada = "<input type='text' id='txtDataEntFiltro' onkeydown=\"FormataData(this)\" onkeyup=\"FormataData(this)\" onkeypress=\"ListarEntradasData(this.value)\" value=\"$dataEntrada\" placeholder='Data Entrada' maxlength='10' style=\"width: 150px; margin: auto; text-align: center;\">";
 		$selProfissionais = "<select id='selProfFiltro' onchange=\"FiltraTabelaEntradas()\" style=\"text-align: center;\"><option value='selecione'>Profissional</option>" . ListarProfissionais('') . "</select>";
 		$txtNomeUsuarioFiltro = "<input type='text' id='txtNomeUsuarioFiltro' onkeyup=\"FiltraTabelaEntradas()\" placeholder='Usuário' style=\"text-align: center;\">";
 
@@ -324,7 +324,7 @@
 				}
 			}
 
-			function EditarProfissional(cnsProf)
+			function ListarEntradasData(dataEnt)
 			{
 				try
 				{
@@ -334,31 +334,24 @@
 					xhttp.onreadystatechange = function(){
 						if (this.readyState == 4 && this.status == 200)
 						{
+							//alert(this.responseText);
 							let dadosRes = JSON.parse(this.responseText);
-							//alert(JSON.stringify(dadosRes));
-							if (dadosRes.length > 0)
+							alert(JSON.stringify(dadosRes));
+							alert(dadosRes['entradas'].length);
+							if (dadosRes['entradas'].length > 0)
 							{
-								for (let i = 0 ; i < dadosRes.length ; i++)
+								for (let i = 0 ; i < dadosRes['entradas'].length ; i++)
 								{
-									if (dadosRes[i]['profissional'])
+									if (dadosRes['entradas'][i])
 									{
-										let cns = dadosRes[i]['profissional'].cns;
-										let nomeProf = dadosRes[i]['profissional'].nome;
-										let perfilProf = dadosRes[i]['profissional'].perfil;
-										let statusProf = dadosRes[i]['profissional'].status;
+										let nomeUsuario = dadosRes['entradas'][i].nomeUsuario;
+										let nomeProf = dadosRes['entradas'][i].nomeProfissionalExec;
+										let dataEntrada = dadosRes['entradas'][i].dataEntrada;
+										let horaEntrada = dadosRes['entradas'][i].horaEntrada;
+										let dataSaida = dadosRes['entradas'][i].dataSaida;
+										let horaSaida = dadosRes['entradas'][i].horaSaida;
 
-										document.getElementById("nomeProf").value = nomeProf;
-										document.getElementById("cnsProf").value = cns;
-										document.getElementById("perfil").value = perfilProf;
-										document.getElementById("status").value = statusProf;
 										
-										document.getElementById("cnsProf").disabled = true;
-										document.getElementById("perfil").disabled = true;
-										document.getElementById("acao").value = "ALTERAR";
-										document.getElementById("salvar").innerHTML = "Alterar";
-										
-										document.body.scrollTop = 0;
-										document.documentElement.scrollTop = 0;
 									}
 								}
 							}
@@ -367,7 +360,7 @@
 					
 					xhttp.open("POST", "res_ajax.php", true);
 					xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					xhttp.send("cns=" + cnsProf + "&funcao=9" + "&sss=" + SSS);
+					xhttp.send("data=" + dataEnt + "&funcao=4" + "&sss=" + SSS);
 				}
 				catch(erro)
 				{

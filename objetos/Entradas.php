@@ -119,7 +119,9 @@
                                            'dataEntrada' => $this->getDataEntrada(),
                                            'horaEntrada' => $this->getHoraEntrada(),
                                            'cnsUsuario' => $this->getUsuario()->getCnsPessoa(),
+                                           'nomeUsuario' => $this->getUsuario()->getNomePessoa(),
                                            'cnsProfissionalExec' => $this->getProfissionalExec()->getCnsPessoa(),
+                                           'nomeProfissionalExec' => $this->getProfissionalExec()->getNomePessoa(),
                                            'dataSaida' => $this->getDataSaida(),
                                            'horaSaida' => $this->getHoraSaida());
 

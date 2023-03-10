@@ -33,6 +33,13 @@
 				
 				echo $resConf;
 			}
+			else if ((isset($_POST["data"])) && ($_POST["funcao"] == 4))
+			{
+				$dataEntrada = LimparDados($_POST["data"]);
+				$resConf = PegaEntradasData($dataEntrada);
+				
+				echo $resConf;
+			}
 			else if ((isset($_POST["cns"])) && ($_POST["funcao"] == 5))
 			{
 				$cnsProf = LimparDados($_POST["cns"]);
@@ -115,6 +122,25 @@
 		array_push($dadosUnidade, ["unidade" => $unidade->geraArrayAtributos('')]);
 		
 		return json_encode($dadosUnidade);
+	}
+
+	function PegaEntradasData($data)
+	{
+		$listaEntradas = array("entradas" => []);
+
+		$entradasDao = new EntradasDAO();
+		$entradas = $entradasDao->listarEntradas($data);
+
+		$arrayEntradas = array();
+
+		for ($e = 0 ; $e < count($entradas) ; $e++)
+		{
+			array_push($arrayEntradas, $entradas[$e]->geraArrayAtributos(''));
+		}
+
+		$listaEntradas["entradas"] = $arrayEntradas;
+
+		return json_encode($listaEntradas);
 	}
 
 	function LimparDados($dados)
