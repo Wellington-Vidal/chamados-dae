@@ -15,9 +15,6 @@
 
         function __destruct()
         {
-            $this->cnsPessoa = null;
-            $this->nomePessoa = null;
-
             $this->senhaProf = null;
             $this->perfilProf = null;
             $this->statusProf = null;

@@ -324,10 +324,15 @@
 				}
 			}
 
-			function ListarEntradasData(dataEnt)
+			function LocalizarUsuario(txtbox)
 			{
 				try
 				{
+					if (!validaCNS(txtbox.value))
+					{
+						return;
+					}
+
 					var xhttp;
 					xhttp = new XMLHttpRequest();
 
@@ -336,24 +341,139 @@
 						{
 							//alert(this.responseText);
 							let dadosRes = JSON.parse(this.responseText);
-							alert(JSON.stringify(dadosRes));
-							alert(dadosRes['entradas'].length);
-							if (dadosRes['entradas'].length > 0)
+							//alert(JSON.stringify(dadosRes));
+							//alert(dadosRes.length);
+
+							if (dadosRes.length > 0)
 							{
+								for (let i = 0 ; i < dadosRes.length ; i++)
+								{
+									if (dadosRes[i])
+									{
+										let cnsUsuario = dadosRes[i].cnsUsuario;
+										let nomeUsuario = dadosRes[i].nomeUsuario;										
+										
+										document.getElementById('nomeUsuario').value = nomeUsuario;
+									}
+								}
+							}
+						}
+					};
+					
+					xhttp.open("POST", "res_ajax.php", true);
+					xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					xhttp.send("dados=" + txtbox.value + "&funcao=1" + "&sss=" + SSS);
+				}
+				catch(erro)
+				{
+					console.log(erro.message);
+				}
+			}
+
+			function ListarEntradasData(dataEnt)
+			{
+				try
+				{
+					if (!VerificaData(dataEnt))
+					{
+						return;
+					}
+
+					var xhttp;
+					xhttp = new XMLHttpRequest();
+
+					xhttp.onreadystatechange = function(){
+						if (this.readyState == 4 && this.status == 200)
+						{
+							//alert(this.responseText);
+							let dadosRes = JSON.parse(this.responseText);
+							//alert(JSON.stringify(dadosRes));
+							//alert(dadosRes['entradas'].length);
+
+							let tabela = document.getElementById('tab-ent');
+
+							if (dadosRes['entradas'].length > 0)
+							{								
+								RemoveLinhasTabela('tab-ent');
+
 								for (let i = 0 ; i < dadosRes['entradas'].length ; i++)
 								{
 									if (dadosRes['entradas'][i])
-									{
+									{					
+										let idEntrada = dadosRes['entradas'][i].idEnt;
 										let nomeUsuario = dadosRes['entradas'][i].nomeUsuario;
 										let nomeProf = dadosRes['entradas'][i].nomeProfissionalExec;
 										let dataEntrada = dadosRes['entradas'][i].dataEntrada;
 										let horaEntrada = dadosRes['entradas'][i].horaEntrada;
 										let dataSaida = dadosRes['entradas'][i].dataSaida;
 										let horaSaida = dadosRes['entradas'][i].horaSaida;
-
 										
+										let linha = document.createElement('tr');
+
+										let col1 = document.createElement('td');
+										col1.innerHTML = (i + 1);					
+
+										let col2 = document.createElement('td');
+										col2.innerHTML = dataEntrada + " - " + horaEntrada;
+
+										let col3 = document.createElement('td');
+										col3.innerHTML = dataSaida + "-" + horaSaida;
+
+										if (dataSaida == null)
+										{
+											col3.innerHTML = "---";
+										}
+
+										let col4 = document.createElement('td');
+										col4.innerHTML = nomeProf;
+
+										let col5 = document.createElement('td');
+										col5.innerHTML = nomeUsuario;
+
+										let hoje = new Date();
+										let dia = hoje.getDate() < 10 ? '0' + hoje.getDate() : hoje.getDate();
+										let mes = hoje.getMonth() + 1 ? '0' + (hoje.getMonth()*1 + 1) : (hoje.getMonth()*1 + 1);
+										let ano = hoje.getFullYear();
+										let dataFormatada = dia + '/' + mes + '/' + ano;
+
+										let btnExcluir = document.createElement('button');
+										btnExcluir.innerHTML = "Excluir";
+										btnExcluir.style.padding = "0px";
+										btnExcluir.addEventListener("click", function(){ExcluirEntrada(idEntrada);});
+
+										let col6 = document.createElement('td');
+
+										if (dataEnt != dataFormatada)
+										{
+											col6.innerHTML = "---";
+										}
+										else
+										{
+											col6.appendChild(btnExcluir);
+										}										
+
+										linha.appendChild(col1);
+										linha.appendChild(col2);
+										linha.appendChild(col3);
+										linha.appendChild(col4);
+										linha.appendChild(col5);
+										linha.appendChild(col6);
+
+										tabela.appendChild(linha);
 									}
 								}
+							}
+							else
+							{
+								RemoveLinhasTabela('tab-ent');
+
+								let linha = document.createElement('tr');
+								let col1 = document.createElement('td');
+								col1.innerHTML = "Sem Registros";
+								col1.setAttribute("colspan", 6);
+
+								linha.appendChild(col1);
+								tabela.appendChild(linha);
 							}
 						}
 					};
@@ -515,7 +635,7 @@
 					<div style="width: 100%;">
 						<div style="width:auto;">
                             <div style="width:20%;">
-								<input type="text" id="cnsUsuario" name="cnsUsuario" maxlength="15" placeholder="Cartão do SUS" onkeyup="Numerico(this)" onkeydown="Numerico(this)" value="<?php if (isset($cnsUsuario)){echo $cnsUsuario;}?>"/>
+								<input type="text" id="cnsUsuario" name="cnsUsuario" maxlength="15" placeholder="Cartão do SUS" onkeyup="Numerico(this)" onkeydown="Numerico(this)" onkeypress="LocalizarUsuario(this)" value="<?php if (isset($cnsUsuario)){echo $cnsUsuario;}?>"/>
 							</div>
 							<div style="width:50%;">
 								<input type="text" id="nomeUsuario" name="nomeUsuario" maxlength="100" placeholder="Nome do Usuário" onkeyup="Maiusculo(this)" onkeydown="Maiusculo(this)" value="<?php if (isset($nomeUsuario)){echo $nomeUsuario;} ?>" />

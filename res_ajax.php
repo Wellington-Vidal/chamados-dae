@@ -40,47 +40,6 @@
 				
 				echo $resConf;
 			}
-			else if ((isset($_POST["cns"])) && ($_POST["funcao"] == 5))
-			{
-				$cnsProf = LimparDados($_POST["cns"]);
-				$resConf = ChamaPrimeiroDaFila($cnsProf);
-				
-				echo $resConf;
-			}
-			else if ((isset($_POST["idEnt"])) && ($_POST["funcao"] == 6))
-			{
-				$idEnt = LimparDados($_POST["idEnt"]);
-				$resConf = PegaDadosDaEntrada($idEnt);
-				
-				echo $resConf;
-			}
-			else if ((isset($_POST["logado"])) && ($_POST["funcao"] == 7))
-			{
-				$resConf = ExibePacientesVezConsultorio();
-				
-				echo $resConf;
-			}
-			else if ((isset($_POST["cns"])) && ($_POST["funcao"] == 8))
-			{
-				$cnsProf = LimparDados($_POST["cns"]);
-				$resConf = ChamaPrimeiroDaFilaTriagem($cnsProf);
-				
-				echo $resConf;
-			}
-			else if ((isset($_POST["cns"])) && ($_POST["funcao"] == 9))
-			{
-				$cnsProf = LimparDados($_POST["cns"]);
-				$resConf = PegaDadosProfissional($cnsProf);
-				
-				echo $resConf;
-			}
-			else if ((isset($_POST["idSala"])) && ($_POST["funcao"] == 10))
-			{
-				$idSala = LimparDados($_POST["idSala"]);
-				$resConf = PegaDadosDoConsultorio($idSala);
-				
-				echo $resConf;
-			}
 		}
 	}
 	
@@ -102,10 +61,9 @@
 	
 			if (!empty($usuario))
 			{
-				$arrayEndereco = array("endereco" => $usuario->getEndereco()->geraArrayAtributos(''));
-				$arrayUsuario = array_merge($usuario->geraArrayAtributos(''), $arrayEndereco);
+				$arrayUsuario = $usuario->geraArrayAtributos('');
 
-				array_push($dadosUsuario, ["usuario" => $arrayUsuario]);
+				array_push($dadosUsuario, $arrayUsuario);
 			}
 		}
 		
@@ -150,7 +108,7 @@
 		$dados = htmlspecialchars($dados);
 		return $dados;
 	}
-
+	/*
 	function ChamaPrimeiroDaFila($cnsProf)
 	{
 		define("ATENDIMENTO_MEDICO", "Atendimento Médico");
@@ -224,8 +182,8 @@
 		}
 
 		return json_encode($dadosUsuario);
-	}
-
+	}*/
+	/*
 	function ChamaPrimeiroDaFilaTriagem($cnsProf)
 	{
 		$dadosUsuario = array();
@@ -270,7 +228,7 @@
 		}
 
 		return json_encode($dadosUsuario);
-	}
+	}*/
 
 	function PegaDadosDaEntrada($idEnt)
 	{
@@ -285,7 +243,8 @@
 			$usuario = $usuariosDao->selecionaUsuario($entrada->getUsuario()->getCnsPessoa());
 			$entrada->setUsuario($usuario);
 
-			$arrayDadosUsuario = array_merge($usuario->geraArrayAtributos(''), $usuario->getEndereco()->geraArrayAtributos(''));
+			$arrayDadosUsuario = $usuario->geraArrayAtributos('');
+			//$arrayDadosUsuario = array_merge($usuario->geraArrayAtributos(''), $usuario->getEndereco()->geraArrayAtributos(''));
 
 			array_push($arrayEntrada, ['usuario' => $arrayDadosUsuario]);
 		}
@@ -294,7 +253,7 @@
 
 		return json_encode($arrayEntrada);
 	}
-
+	/*
 	function ExibePacientesVezConsultorio()
 	{
 		$arrayConsultorios = array();
@@ -319,7 +278,7 @@
 		}
 
 		return json_encode($arrayConsultorios);
-	}
+	}*/
 
 	function PegaDadosProfissional($cnsProf)
 	{
@@ -335,7 +294,7 @@
 
 		return json_encode($arrayProfissonal);
 	}
-
+	/*
 	function PegaDadosDoConsultorio($idSala)
 	{
 		$arrayConsultorio = array();
@@ -349,5 +308,5 @@
 		}
 
 		return json_encode($arrayConsultorio);
-	}
+	}*/
 ?>

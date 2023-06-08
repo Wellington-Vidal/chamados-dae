@@ -104,6 +104,60 @@ function FormataData(txtbox)
 	}
 }
 
+function VerificaData(strData)
+{
+	var numeros = /[^0-9|/]/mi;
+	var res = strData.match(numeros);
+	strData = strData.replace(res,"");
+
+	let arrayData = strData.split("/");
+
+	if ((arrayData.length == 3) && (strData.length == 10))
+	{
+		let dia = arrayData[0];
+		let mes = arrayData[1];
+		let ano = arrayData[2];
+
+		if (((dia * 1 >= 1) && (dia * 1 <= 31)) && ((mes * 1 >= 1) && (mes * 1 <= 12)) && (ano * 1 > 0))
+		{
+			if ((dia == '31') && ((mes == '02') || (mes == '04') || (mes == '06') || (mes == '09') || (mes == '11')))
+			{
+				return false;
+			}
+			else if ((dia == '30') && (mes == '02'))
+			{
+				return false;
+			}
+			else if ((dia == '29') && (mes == '02') && (EhBissexto(ano) == false))
+			{
+				return false;
+			}
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
+function EhBissexto(ano)
+{
+	let bissexto = false;
+
+	if (((ano % 4 == 0) && (ano % 100 != 0)) || (ano % 400 == 0))
+	{
+		bissexto = true;
+	}
+	
+	return bissexto;
+}
+
 function FormataCep(txtbox)
 {
 	var txtValor = txtbox.value;
@@ -282,6 +336,19 @@ function validaCPF(cpf)
 	}
 
 	return true;
+}
+
+function RemoveLinhasTabela(idtabela)
+{
+	//Mantem a primeira linha (i = 0) cabeçalho da tabela
+	let t = document.getElementById(idtabela);
+	let r = t.getElementsByTagName('tr');
+
+	for (let i = r.length - 1 ; i > 0 ; i--)
+	{
+		let pai = r[i].parentNode;					
+		pai.removeChild(r[i]);
+	}
 }
 
 function IniciaTemporizador(tempoRep, relogio)

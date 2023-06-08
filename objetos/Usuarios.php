@@ -10,8 +10,7 @@
 
         function __destruct()
         {
-            $this->cnsPessoa = null;
-            $this->nomePessoa = null;
+            //DESTRUTOR DE PESSOA
         }
 
         function geraArrayAtributos($arrayColunasAdicionais)
