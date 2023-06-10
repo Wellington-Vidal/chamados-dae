@@ -40,6 +40,13 @@
 				
 				echo $resConf;
 			}
+			else if ((isset($_POST["cns"])) && ($_POST["funcao"] == 5))
+			{
+				$cnsProf = LimparDados($_POST["cns"]);
+				$resConf = PegaDadosProfissional($cnsProf);
+				
+				echo $resConf;
+			}
 		}
 	}
 	

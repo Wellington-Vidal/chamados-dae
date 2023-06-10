@@ -286,7 +286,7 @@
 					
 					xhttp.open("POST", "res_ajax.php", true);
 					xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					xhttp.send("cns=" + cnsProf + "&funcao=9" + "&sss=" + SSS);
+					xhttp.send("cns=" + cnsProf + "&funcao=5" + "&sss=" + SSS);
 				}
 				catch(erro)
 				{
