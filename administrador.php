@@ -31,7 +31,7 @@
 	<body onresize="TamanhoIframe()" onload="TamanhoIframe()">
 		
 		<div class="container_menu">
-			<img src="imagens/LogoSPA.png" alt="SPA - OLINDA"/>
+			<img src="imagens/LogoSPA.png" alt="DAE - CHAMADOS"/>
 			
 			<ul class="menu">
 				<li><a href="#">Acesso</a>
@@ -40,28 +40,24 @@
 						<li><a href='alterar_senha.php' target='pagina'>Alterar Senha</a></li>
 					</ul>
 				</li>
-				<li><a href="#">Cadastrar</a>
-					<ul class="submenu">
-						<?php 
-							if($_SESSION["PERFIL"] == "ADMINISTRADOR")
-							{
-								echo "<li><a href='cadastrar_entrada.php' target='pagina'>Cadastrar Entrada</a></li>";
-								echo "<li><a href='cadastrar_profissionais.php' target='pagina'>Cadastro de Profissionais</a></li>";
-								echo "<li><a href='cadastrar_unidade_exe.php' target='pagina'>Cadastro de Unidade</a></li>";
-							}
-							else if($_SESSION["PERFIL"] == "EXECUTANTE")
-							{
-								echo "<li><a href='cadastrar_hist_clinica.php' target='pagina'>Atendimento</a></li>";
-							}
-						?>
-					</ul>
-				</li>
+				<?php 
+					if($_SESSION["PERFIL"] == "ADMINISTRADOR")
+					{
+						echo "<li><a href=\"#\">Cadastrar</a>";
+						echo "<ul class=\"submenu\">";
+						echo "<li><a href='cadastrar_entrada.php' target='pagina'>Cadastrar Entrada</a></li>";
+						echo "<li><a href='cadastrar_profissionais.php' target='pagina'>Cadastro de Profissionais</a></li>";
+						echo "<li><a href='cadastrar_unidade_exe.php' target='pagina'>Cadastro de Unidade</a></li>";
+						echo "</ul>";
+						echo "</li>";
+					}
+				?>
 				<li><a href="#">Consultar</a>
 					<ul class="submenu">
 						<?php
-							if ($_SESSION["PERFIL"] != "RECEPCIONISTA")
+							if ($_SESSION["PERFIL"] == "EXECUTANTE")
 							{
-								echo "<li><a href='vincular_consultorio.php' target='pagina'>Vincular Consultório</a></li>";
+								echo "<li><a href='consultar_agenda.php' target='pagina'>Atendimento</a></li>";
 							}
 						?>
 						<li class="Saida"><a href="chamado_recepcao.php" target='blank'>Chamado Recepção</a></li>
