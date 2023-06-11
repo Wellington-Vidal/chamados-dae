@@ -181,7 +181,7 @@
 		$tabelaEnt = $tabelaEnt . TR_F;
 		
 		$entradasDao = new EntradasDAO();
-		$listaEntradas = $entradasDao->listarEntradas($dataEntrada);
+		$listaEntradas = $entradasDao->listarEntradas($dataEntrada, null);
 
 		if (!empty($listaEntradas))
 		{
