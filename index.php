@@ -118,7 +118,7 @@ session_start();
 	
 		<div class="container_login">
 			<header>
-				<img src="imagens/LogoSPA.png" alt="DAE - OLINDA">
+				<img src="imagens/LogoSPA.png" alt="DAE - CHAMADOS">
 			</header>
 			
 			<form class="frm_login" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
