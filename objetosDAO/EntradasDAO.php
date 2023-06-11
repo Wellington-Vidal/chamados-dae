@@ -23,9 +23,10 @@
         {
             $entrada = new Entradas();
 
-            $sql = "SELECT e.*, u.*
-                    FROM tbl_entradas e, tbl_usuarios u
+            $sql = "SELECT e.*, u.*, p.nome_prof
+                    FROM tbl_entradas e, tbl_usuarios u, tbl_profissionais p
                     WHERE e.cns_usuario=u.cns_usuario
+                    AND e.cns_prof=p.cns_prof
                     AND e.id_entrada=$idEntrada;";
 
             $res = $this->conexao->getConn()->query($sql);
@@ -46,6 +47,7 @@
                     
                     $profissional = new Profissionais(null, null);
                     $profissional->setCnsPessoa($linha['cns_prof']);
+                    $profissional->setNomePessoa($linha['nome_prof']);
 
                     $entrada->setProfissionalExec($profissional);
 
@@ -57,16 +59,29 @@
             return $entrada;
         }
 
-        function listarEntradas($dataEntrada)
+        function listarEntradas($dataEntrada, $cnsProfissional)
         {
             $entradas = array();
 
-            $sql = "SELECT e.*, u.nome_usuario, p.nome_prof
-                    FROM tbl_entradas e, tbl_usuarios u, tbl_profissionais p
-                    WHERE e.cns_usuario=u.cns_usuario 
-                    AND e.cns_prof=p.cns_prof 
-                    AND e.data_entrada='$dataEntrada'
-                    ORDER BY e.id_entrada;";
+            if ($cnsProfissional == null)
+            {
+                $sql = "SELECT e.*, u.nome_usuario, p.nome_prof
+                        FROM tbl_entradas e, tbl_usuarios u, tbl_profissionais p
+                        WHERE e.cns_usuario=u.cns_usuario 
+                        AND e.cns_prof=p.cns_prof 
+                        AND e.data_entrada='$dataEntrada'
+                        ORDER BY e.id_entrada;";
+            }
+            else
+            {
+                $sql = "SELECT e.*, u.nome_usuario, p.nome_prof
+                        FROM tbl_entradas e, tbl_usuarios u, tbl_profissionais p
+                        WHERE e.cns_usuario=u.cns_usuario 
+                        AND e.cns_prof=p.cns_prof 
+                        AND e.cns_prof='$cnsProfissional'
+                        AND e.data_entrada='$dataEntrada'
+                        ORDER BY e.id_entrada;";
+            }
 
             $res = $this->conexao->getConn()->query($sql);
 

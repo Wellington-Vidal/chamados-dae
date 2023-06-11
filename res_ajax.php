@@ -36,7 +36,7 @@
 			else if ((isset($_POST["data"])) && ($_POST["funcao"] == 4))
 			{
 				$dataEntrada = LimparDados($_POST["data"]);
-				$resConf = PegaEntradasData($dataEntrada);
+				$resConf = PegaEntradasData($dataEntrada, null);
 				
 				echo $resConf;
 			}
@@ -44,6 +44,21 @@
 			{
 				$cnsProf = LimparDados($_POST["cns"]);
 				$resConf = PegaDadosProfissional($cnsProf);
+				
+				echo $resConf;
+			}
+			else if ((isset($_POST["data"])) && (isset($_POST["cns"])) && ($_POST["funcao"] == 6))
+			{
+				$dataEntrada = LimparDados($_POST["data"]);
+				$cnsProf = LimparDados($_POST["cns"]);
+				$resConf = PegaEntradasData($dataEntrada, $cnsProf);
+				
+				echo $resConf;
+			}
+			else if ((isset($_POST["id"])) && ($_POST["funcao"] == 7))
+			{
+				$idEntrada = LimparDados($_POST["id"]);
+				$resConf = PegaDadosDaEntrada($idEntrada);
 				
 				echo $resConf;
 			}
@@ -89,12 +104,12 @@
 		return json_encode($dadosUnidade);
 	}
 
-	function PegaEntradasData($data)
+	function PegaEntradasData($data, $cnsProf)
 	{
 		$listaEntradas = array("entradas" => []);
 
 		$entradasDao = new EntradasDAO();
-		$entradas = $entradasDao->listarEntradas($data);
+		$entradas = $entradasDao->listarEntradas($data, $cnsProf);
 
 		$arrayEntradas = array();
 
@@ -244,19 +259,21 @@
 
 		$arrayEntrada = array();
 
-		if (!empty($entrada))
+		$unidadesDao = new UnidadesDAO();
+		$unidades = $unidadesDao->listaUnidades();
+
+		if (!empty($unidades))
 		{
-			$usuariosDao = new UsuariosDAO();
-			$usuario = $usuariosDao->selecionaUsuario($entrada->getUsuario()->getCnsPessoa());
-			$entrada->setUsuario($usuario);
+			$arrayUnidade = ['unidade' => $unidades[0]->geraArrayAtributos('')];
 
-			$arrayDadosUsuario = $usuario->geraArrayAtributos('');
-			//$arrayDadosUsuario = array_merge($usuario->geraArrayAtributos(''), $usuario->getEndereco()->geraArrayAtributos(''));
+			//array_push($arrayEntrada, ['entrada' => $entrada->geraArrayAtributos('')]);
 
-			array_push($arrayEntrada, ['usuario' => $arrayDadosUsuario]);
+			$arrayEntrada = array_merge(['entrada' => $entrada->geraArrayAtributos('')], $arrayUnidade);
 		}
 
-		array_push($arrayEntrada, ['entrada' => $entrada->geraArrayAtributos('')]);
+		//array_push($arrayConsultorios, ['consultorios' => $arrayConsultorio]);
+
+		//array_push($arrayEntrada, ['entrada' => $entrada->geraArrayAtributos('')]);
 
 		return json_encode($arrayEntrada);
 	}
