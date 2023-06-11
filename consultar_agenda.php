@@ -240,6 +240,11 @@
 										btnConcluir.style.padding = "0px";
 										btnConcluir.addEventListener("click", function(){ConcluirAtendimento(idEntrada);});
 
+										let btnDeclaracao = document.createElement('button');
+										btnDeclaracao.innerHTML = "Declaração";
+										btnDeclaracao.style.padding = "0px";
+										btnDeclaracao.addEventListener("click", function(){GerarDeclaracao(idEntrada);});
+
 										let col6 = document.createElement('td');
 
 										if (dataEnt != dataFormatada)
@@ -248,7 +253,14 @@
 										}
 										else
 										{
-											col6.appendChild(btnConcluir);
+											if (dataSaida == null)
+											{
+												col6.appendChild(btnConcluir);
+											}
+											else
+											{
+												col6.appendChild(btnDeclaracao);
+											}
 										}										
 
 										linha.appendChild(col1);
